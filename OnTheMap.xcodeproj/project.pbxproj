@@ -8,22 +8,28 @@
 
 /* Begin PBXBuildFile section */
 		99650C141EF22CC900AEB7FE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99650C131EF22CC900AEB7FE /* AppDelegate.swift */; };
-		99650C161EF22CC900AEB7FE /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99650C151EF22CC900AEB7FE /* FirstViewController.swift */; };
+		99650C161EF22CC900AEB7FE /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99650C151EF22CC900AEB7FE /* MapViewController.swift */; };
 		99650C181EF22CC900AEB7FE /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99650C171EF22CC900AEB7FE /* SecondViewController.swift */; };
 		99650C1B1EF22CC900AEB7FE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 99650C191EF22CC900AEB7FE /* Main.storyboard */; };
 		99650C1D1EF22CC900AEB7FE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 99650C1C1EF22CC900AEB7FE /* Assets.xcassets */; };
 		99650C201EF22CC900AEB7FE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 99650C1E1EF22CC900AEB7FE /* LaunchScreen.storyboard */; };
+		99650C281EF22E1400AEB7FE /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99650C271EF22E1400AEB7FE /* LoginViewController.swift */; };
+		99650C2B1EF2FD3000AEB7FE /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99650C2A1EF2FD2F00AEB7FE /* MapKit.framework */; };
+		99650C2D1EF311A300AEB7FE /* AddLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99650C2C1EF311A300AEB7FE /* AddLocationViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		99650C101EF22CC900AEB7FE /* OnTheMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		99650C131EF22CC900AEB7FE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		99650C151EF22CC900AEB7FE /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
+		99650C151EF22CC900AEB7FE /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		99650C171EF22CC900AEB7FE /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
 		99650C1A1EF22CC900AEB7FE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		99650C1C1EF22CC900AEB7FE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		99650C1F1EF22CC900AEB7FE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		99650C211EF22CC900AEB7FE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		99650C271EF22E1400AEB7FE /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		99650C2A1EF2FD2F00AEB7FE /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		99650C2C1EF311A300AEB7FE /* AddLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddLocationViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				99650C2B1EF2FD3000AEB7FE /* MapKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -42,6 +49,7 @@
 			children = (
 				99650C121EF22CC900AEB7FE /* OnTheMap */,
 				99650C111EF22CC900AEB7FE /* Products */,
+				99650C291EF2FD2F00AEB7FE /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -57,14 +65,24 @@
 			isa = PBXGroup;
 			children = (
 				99650C131EF22CC900AEB7FE /* AppDelegate.swift */,
-				99650C151EF22CC900AEB7FE /* FirstViewController.swift */,
+				99650C151EF22CC900AEB7FE /* MapViewController.swift */,
 				99650C171EF22CC900AEB7FE /* SecondViewController.swift */,
 				99650C191EF22CC900AEB7FE /* Main.storyboard */,
 				99650C1C1EF22CC900AEB7FE /* Assets.xcassets */,
 				99650C1E1EF22CC900AEB7FE /* LaunchScreen.storyboard */,
 				99650C211EF22CC900AEB7FE /* Info.plist */,
+				99650C271EF22E1400AEB7FE /* LoginViewController.swift */,
+				99650C2C1EF311A300AEB7FE /* AddLocationViewController.swift */,
 			);
 			path = OnTheMap;
+			sourceTree = "<group>";
+		};
+		99650C291EF2FD2F00AEB7FE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				99650C2A1EF2FD2F00AEB7FE /* MapKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -101,6 +119,11 @@
 						CreatedOnToolsVersion = 8.3.3;
 						DevelopmentTeam = HN76A6WF5Z;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Maps.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -140,9 +163,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				99650C281EF22E1400AEB7FE /* LoginViewController.swift in Sources */,
 				99650C181EF22CC900AEB7FE /* SecondViewController.swift in Sources */,
+				99650C2D1EF311A300AEB7FE /* AddLocationViewController.swift in Sources */,
 				99650C141EF22CC900AEB7FE /* AppDelegate.swift in Sources */,
-				99650C161EF22CC900AEB7FE /* FirstViewController.swift in Sources */,
+				99650C161EF22CC900AEB7FE /* MapViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -308,6 +333,7 @@
 				99650C261EF22CC900AEB7FE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
