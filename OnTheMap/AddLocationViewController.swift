@@ -7,32 +7,36 @@
 //
 
 import UIKit
+import CoreLocation
+
 
 class AddLocationViewController: UIViewController {
 
+    @IBOutlet weak var locationTextView: UITextField!
+    @IBOutlet weak var urlTextView: UITextField!
+    var geocoder: CLGeocoder?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
     
     @IBAction func cancelTapped(_ sender: UIButton) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    @IBAction func findLocationTapped(_ sender: UIButton) {
+        if geocoder == nil {
+            geocoder = CLGeocoder()
+        }
+        geocoder?.geocodeAddressString(locationTextView.text!, completionHandler: { (placemarks, error) in
+            let placemark = placemarks?.first
+            let latitute = placemark?.location?.coordinate.latitude
+            let longitude = placemark?.location?.coordinate.longitude
+            print("\(String(describing: latitute!)), \(String(describing: longitude!))")
+            if let presenter = self.presentingViewController as? MapViewController {
+                presenter.addPinLocation(CLLocationCoordinate2DMake(latitute!, longitude!), self.urlTextView.text!, self.locationTextView.text!)
+            }
+        })
+
         self.dismiss(animated: true, completion: nil)
     }
 

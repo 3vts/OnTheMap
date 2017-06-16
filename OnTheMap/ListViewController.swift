@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FBSDKLoginKit
 
 class ListViewController: UITableViewController {
 
@@ -21,7 +22,7 @@ class ListViewController: UITableViewController {
     }
 
     @IBAction func logoutTapped(_ sender: UIButton) {
-        self.dismiss(animated: true, completion: nil)
+        UdacityClient.sharedInstance().logout(self)
     }
 
 }
