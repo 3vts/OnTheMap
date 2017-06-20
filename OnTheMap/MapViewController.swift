@@ -11,8 +11,11 @@ import MapKit
 
 class MapViewController: UIViewController, MKMapViewDelegate {
     
+    /// A Location Manager used to fetch user's location
     var locationManager = CLLocationManager()
+    
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var loadingIndicator: UIView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,58 +23,134 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
+        
+    }
+    
+    @IBAction func showMyPinLocation(segue:UIStoryboardSegue){
+        if let sourceViewController = segue.source as? AddLocationViewController {
+            if let myAnnotation = sourceViewController.myAnnotation {
+                addPinLocation(myAnnotation.location, myAnnotation.url, myAnnotation.title)
+                zoomMapToPin(myAnnotation.region)
+            }
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if UdacityClient.sharedInstance().students.isEmpty || mapView.annotations.count == 0 {
+            reloadAnnotations()
+        }
+        let region = UdacityClient.sharedInstance().region
+        if region != nil {
+            zoomMapToPin(region!)
+        }
+    }
+    
+    func showAnnotations() {
+        for student in UdacityClient.sharedInstance().students {
+            let location = CLLocationCoordinate2DMake(student.latitude, student.longitude)
+            let url = student.mediaURL
+            let title = "\(student.firstName) \(student.lastName)"
+            performUIUpdatesOnMain {
+                self.addPinLocation(location, url, title)
+            }
+        }
+        
+    }
+    
+    func reloadAnnotations(){
+        setActivityindicator(false)
+        mapView.removeAnnotations(mapView.annotations)
+        UdacityClient.sharedInstance().getStudentsLocations(self){
+            self.showAnnotations()
+        }
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         let reuseId = "pin"
         
-        if(annotation is MKUserLocation){
+        setActivityindicator(mapView.annotations.count > 0)
+        
+        if annotation is MKUserLocation {
+            
             return nil
         }
         
-        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
+        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId)
         
         if pinView == nil {
-            pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
+            pinView = MKAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
             pinView!.canShowCallout = true
-            pinView!.pinTintColor = .red
             pinView!.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
         }
         else {
             pinView!.annotation = annotation
         }
+        let customPin = annotation as! OnTheMapAnnotation
+        pinView!.image = customPin.imageName
         
         return pinView
         
     }
     
+    
+    
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         if control == view.rightCalloutAccessoryView {
             let app = UIApplication.shared
-            if let url = view.annotation?.subtitle! {
-                app.open(URL(string: url)!, options: [:], completionHandler: nil)
+            guard let urlString = view.annotation?.subtitle!, let url = URL(string: urlString) else {
+                return
             }
+            app.open(url, options: [:], completionHandler: nil)
         }
         
+    }
+    
+    func mapViewWillStartRenderingMap(_ mapView: MKMapView) {
+        setActivityindicator(false)
+    }
+    
+    func mapViewDidFinishRenderingMap(_ mapView: MKMapView, fullyRendered: Bool) {
+        setActivityindicator(true)
     }
     
     @IBAction func logoutTapped(_ sender: UIButton) {
         UdacityClient.sharedInstance().logout(self)
     }
     
-    func addPinLocation(_ location: CLLocationCoordinate2D, _ url: String, _ subTitle: String)  {
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = location
-        annotation.title = url
-        annotation.subtitle = subTitle
-        self.mapView.addAnnotation(annotation)
-        let span = MKCoordinateSpanMake(0.01, 0.01)
-        let region = MKCoordinateRegionMake(location, span)
-        self.mapView.region = region
+    @IBAction func reloadTapped(_ sender: UIButton) {
+        locationManager.requestLocation()
+        reloadAnnotations()
     }
     
+    @IBAction func selectMapChanged(_ sender: UISegmentedControl) {
+        switch sender.selectedSegmentIndex {
+        case 0:
+            mapView.mapType = .standard
+        case 1:
+            mapView.mapType = .satellite
+        default:
+            mapView.mapType = .hybrid
+        }
+    }
     
+    func addPinLocation(_ location: CLLocationCoordinate2D, _ url: String, _ title: String)  {
+        let annotation = OnTheMapAnnotation()
+        annotation.imageName = UIImage(named: "icon_pin")
+        annotation.coordinate = location
+        annotation.title = title
+        annotation.subtitle = url
+        self.mapView.addAnnotation(annotation)
+    }
     
+    func setActivityindicator(_ hide: Bool){
+        self.view.isUserInteractionEnabled = hide
+        UIView.animate(withDuration: 0.5) {
+            self.view.alpha = hide ? 1.0 : 0.7
+            self.loadingIndicator.alpha = hide ? 0.0 : 1.0
+            self.loadingIndicator.isHidden = hide
+        }
+    }
 }
 
 extension MapViewController : CLLocationManagerDelegate {
@@ -79,16 +158,21 @@ extension MapViewController : CLLocationManagerDelegate {
         if status == .authorizedWhenInUse {
             locationManager.requestLocation()
             locationManager.allowsBackgroundLocationUpdates = true
+            //locationManager.startUpdatingHeading()
         }
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.first {
-            let span = MKCoordinateSpanMake(0.01, 0.01)
+            let span = MKCoordinateSpanMake(50.0, 50.0)
             let region = MKCoordinateRegion(center: location.coordinate, span: span)
             mapView.setRegion(region, animated: true)
-            //addPinLocation(CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude), "Alvaro Santiesteban", "http://www.google.com")
         }
+    }
+    
+    func zoomMapToPin(_ region: MKCoordinateRegion){
+        mapView.setRegion(region, animated: true)
+        UdacityClient.sharedInstance().region = nil
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {

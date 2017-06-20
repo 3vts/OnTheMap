@@ -18,8 +18,36 @@ extension UdacityClient {
         
         // MARK: URLs
         static let ApiScheme = "https"
-        static let ApiHost = "parse.udacity.com/parse/classes"
-        static let ApiPath = "/3"
-        static let AuthorizationURL = "https://www.udacity.com/api/session"
+        static let ApiHost = "parse.udacity.com"
+        static let ApiPath = "/parse/classes/StudentLocation"
+        static let ApiHeaders = ["X-Parse-Application-Id":"QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", "X-Parse-REST-API-Key":"QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY"]
+        static let AuthorizationURL = "www.udacity.com"
+        static let AuthorizationPath = "/api/session"
+        static let AuthorizationHeaders = ["content-type":"application/json", "Accept":"application/json"]
+    }
+    
+    struct ParameterKeys {
+        static let Limit = "limit"
+        static let Skip = "skip"
+        static let Order = "order"
+    }
+    
+    struct ParameterValues {
+        static let Limit = 1000
+        static let Skip = 0
+        static let Order = "-updatedAt"
+    }
+    
+    struct JSONResponseKeys {
+        static let createdAt = "createdAt"
+        static let firstName = "firstName"
+        static let lastName = "lastName"
+        static let latitude = "latitude"
+        static let longitude = "longitude"
+        static let mapString = "mapString"
+        static let mediaURL = "mediaURL"
+        static let objectId = "mediaURL"
+        static let uniqueKey = "mediaURL"
+        static let updatedAt = "mediaURL"
     }
 }
