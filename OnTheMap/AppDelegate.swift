@@ -35,6 +35,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return handled
     }
     
+    /**
+     Method to check if the session is still valid. It validates the expiration date of the last login session
+     
+     - returns: A boolean indicating if the session is still valid
+     
+     */
     func checkValidSession() -> Bool {
         if let expirationDate = UserDefaults.standard.value(forKey: "SESSION_EXPIRATION_DATE") as? Date {
                 if expirationDate > Date() {

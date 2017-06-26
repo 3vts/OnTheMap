@@ -12,7 +12,16 @@ import FBSDKLoginKit
 
 extension UdacityClient {
     
-    // create a URL from parameters
+    /**
+     Function to create a URL from parameters
+     
+     - parameter host: URL Host for the request
+     - parameter parameters: Parameters for the request
+     - parameter withPathExtension: Path for the URL request
+     - returns: The URL created from the received parameters
+     
+     */
+    
     func udacityURLFromParameters(_ host: String, _ parameters: [String:AnyObject]? = nil, withPathExtension: String? = nil) -> URL {
         
         var components = URLComponents()
@@ -32,11 +41,25 @@ extension UdacityClient {
         return components.url!
     }
     
+    /**
+     Function to create an error from a given String
+     
+     - parameter error: String containing the localizedDescription for the error
+     - parameter domain: Domain in which the function was called
+     - returns: The Error created from the received parameters
+     
+     */
     func createError(_ error: String, _ domain: String) -> Error {
         let userInfo = [NSLocalizedDescriptionKey : error]
         return NSError(domain: domain, code: 1, userInfo: userInfo)
     }
     
+    /**
+     Function to check if the used has posted his location previously
+     
+     - parameter sender: ViewController from which the method was called. Used in the cases a message has to be displayed
+     
+     */
     func previouslyPosted(_ sender: UIViewController){
         guard let userKey = UserDefaults.standard.value(forKey: "KEY") as? String else {
             return
@@ -61,6 +84,13 @@ extension UdacityClient {
         }
     }
     
+    /**
+     Function to request the check if the used has posted his location previously
+     
+     - parameter uniqueKey: The uniqueKey for the Student post
+     - parameter completion: A closure indicating if the user posted previously or not
+     
+     */
     func finishPreviouslyPosted(_ uniqueKey: String, completion: @escaping (Bool) -> ()) {
         
         let methodParameters = [
@@ -81,14 +111,13 @@ extension UdacityClient {
     }
     
     /**
-     Method used to get and parse the Students Locations
+     Function used to get and parse the Students Locations
      
-     - returns: An array containing all the Students Locations
+     - parameter sender: ViewController from which the method was called Used in the cases a message has to be displayed
+     - parameter update: A closure that indicates the end of the function
      
      */
-    
-    func getStudentsLocations(_ view: UIViewController, update:@escaping ()->Void = {}) //-> [Student] {
-    {
+    func getStudentsLocations(_ sender: UIViewController, update:@escaping ()->Void = {}) {
         let methodParameters = [
             ParameterKeys.Limit : ParameterValues.Limit,
             ParameterKeys.Skip : ParameterValues.Skip,
@@ -98,7 +127,7 @@ extension UdacityClient {
         let _ = taskForGETMethod(host: Constants.ApiHost, headers: Constants.ApiHeaders, parameters:  methodParameters, pathExtension:  Constants.ApiPath) { (result, error) in
             // GUARD: Was there an error?
             guard (error == nil) else {
-                self.showErrorMessage(error!, view)
+                self.showErrorMessage(error!, sender)
                 return
             }
             self.students = Student.studentsFromResults(result?["results"] as! [[String:AnyObject]])
@@ -107,11 +136,24 @@ extension UdacityClient {
         
     }
     
+    /**
+     Function used to create the region for the pinned location
+     
+     - parameter coordinate: Geographic coordinates of the location
+     
+     */
     func locationToCenterMap(coordinate: CLLocationCoordinate2D) {
         let span = MKCoordinateSpanMake(1.5, 1.5)
         region = MKCoordinateRegionMake(coordinate, span)
     }
     
+    /**
+     Function used to show a message given an error
+     
+     - parameter error: Error to be displayed
+     - parameter sender: ViewController to display the error
+     
+     */
     func showErrorMessage(_ error: Error, _ sender: UIViewController){
         performUIUpdatesOnMain {
             let controller = UIAlertController(title: "Oops...", message: error.localizedDescription, preferredStyle: .alert)
@@ -119,6 +161,13 @@ extension UdacityClient {
             sender.present(controller, animated: true, completion: nil)
         }
     }
+    
+    /**
+     Function used to logout the user and delete the session information
+     
+     - parameter sender: ViewController from which the method was called Used in the cases a message has to be displayed
+     
+     */
     
     func logout(_ sender: UIViewController) {
         if FBSDKAccessToken.current() != nil {
@@ -142,6 +191,12 @@ extension UdacityClient {
         }
     }
     
+    /**
+     Function used to finish the logout and perform the screen transition
+     
+     - parameter sender: ViewController from which the method was called Used for the screen transition
+     
+     */
     func finishLogout(_ sender: UIViewController){
         performUIUpdatesOnMain {
             let loginViewController = sender.storyboard?.instantiateViewController(withIdentifier: "login")

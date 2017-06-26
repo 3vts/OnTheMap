@@ -20,11 +20,13 @@ extension UdacityClient {
         static let ApiScheme = "https"
         static let ApiHost = "parse.udacity.com"
         static let ApiPath = "/parse/classes/StudentLocation"
-        static let ApiHeaders = ["X-Parse-Application-Id":"QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", "X-Parse-REST-API-Key":"QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY"]
+        static let UserPath = "/api/users/"
         static let AuthorizationHost = "www.udacity.com"
         static let AuthorizationPath = "/api/session"
+        
+        // MARK: Headers
+        static let ApiHeaders = ["X-Parse-Application-Id":"QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", "X-Parse-REST-API-Key":"QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY"]
         static let AuthorizationHeaders = ["content-type":"application/json", "Accept":"application/json"]
-        static let UserPath = "/api/users/"
         static let PostLocationHeaders = ["X-Parse-Application-Id":"QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", "X-Parse-REST-API-Key":"QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", "content-type":"application/json"]
     }
     

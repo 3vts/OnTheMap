@@ -15,12 +15,29 @@ class UdacityClient: NSObject {
     /// Shared session
     var session = URLSession.shared
     
+    /// Region used to store the pinned location
     var region: MKCoordinateRegion? = nil
     
+    /// String used to store the objectID in case of a previously posted location
     var objectID: String?
     
+    /// Student array used to store the information of all the pins retrieved from the server
     var students = [Student]()
     
+    /**
+     Function to PUT or POST to the RESTful service
+     
+     - parameter host: URL Host for the request
+     - parameter headers: Headers for the request
+     - parameter method: String that indicates if the method is going to be used to POST (default) or PUT
+     - parameter jsonBody: String containing the httpBody for the request
+     - parameter pathExtension: Path for the URL request
+     - parameter drop: Boolean indication if the response has to create a subset of the response data
+     - parameter completionHandlerForPOST: A closure which is called to finish the method call
+     - parameter result: The result of the call
+     - parameter error: The error of the call
+     
+     */
     func taskForPOSTMethod(host: String, headers: [String:String], method: String = "POST", jsonBody: String, pathExtension: String? = nil, drop:Bool = true, completionHandlerForPOST: @escaping (_ result: AnyObject?, _ error: Error?) -> Void) -> URLSessionDataTask{
         
         var newData: Data? = nil
@@ -51,6 +68,18 @@ class UdacityClient: NSObject {
         return task
     }
     
+    
+    /**
+     Function to DELETE from the RESTful service
+     
+     - parameter host: URL Host for the request
+     - parameter pathExtension: Path for the URL request
+     - parameter drop: Boolean indication if the response has to create a subset of the response data
+     - parameter completionHandlerForDelete: A closure which is called to finish the method call
+     - parameter result: The result of the call
+     - parameter error: The error of the call
+     
+     */
     func taskForDeleteMethod(host: String, pathExtension: String, completionHandlerForDelete: @escaping (_ result: AnyObject?, _ error: Error?) -> Void) -> URLSessionDataTask {
         let request = NSMutableURLRequest(url: udacityURLFromParameters(host, withPathExtension: pathExtension))
         request.httpMethod = "DELETE"
@@ -84,6 +113,20 @@ class UdacityClient: NSObject {
         return task
     }
     
+    /**
+     Function to GET from the RESTful service
+     
+     - parameter host: URL Host for the request
+     - parameter headers: Headers for the request
+     - parameter parameters: Parameters for the request
+     - parameter method: String that indicates if the method is going to be used to POST (default) or PUT
+     - parameter pathExtension: Path for the URL request
+     - parameter drop: Boolean indication if the response has to create a subset of the response data
+     - parameter completionHandlerForGET: A closure which is called to finish the method call
+     - parameter result: The result of the call
+     - parameter error: The error of the call
+     
+     */
     func taskForGETMethod(host: String, headers: [String:String]? = nil, parameters: [String:AnyObject]? = nil, pathExtension: String? = nil, drop: Bool = false, completionHandlerForGET: @escaping (_ result: AnyObject?, _ error: Error?) -> Void) -> URLSessionDataTask{
         
         var newData: Data? = nil
@@ -114,8 +157,19 @@ class UdacityClient: NSObject {
         return task
     }
     
+    
+    /**
+     Function to handle the response from the requests
+     
+     - parameter data: Data received from the request
+     - parameter response: Server response
+     - parameter error: The error of the call
+     - parameter domain: Domain in which the function was called (used in the cases an error has to be created)
+     - returns: A tuple containg the data already parsed and the error returned from the parsing (if any)
+     
+     */
     func sessionHandler(_ data: Data?, _ response: URLResponse?, _ error: Error?, _ domain: String) -> (error: Error?, data: Data?) {
-
+        
         
         /* GUARD: Was there an error? */
         guard (error == nil) else {
@@ -136,6 +190,13 @@ class UdacityClient: NSObject {
         return (nil, data)
     }
     
+    /**
+     Function to parse the data received from the requests and return the error given
+     
+     - parameter data: Data received from the request
+     - returns: A string containing the server error
+     
+     */
     func parseDataStatus(_ data: Data) -> String {
         var newData: Data? = nil
         let statusString = String(data: data, encoding: String.Encoding(rawValue: String.Encoding.utf8.rawValue))!
