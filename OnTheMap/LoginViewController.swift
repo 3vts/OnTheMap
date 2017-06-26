@@ -9,7 +9,7 @@
 import UIKit
 import FBSDKLoginKit
 
-class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
+class LoginViewController: UIViewController {
     
     /// The Facebook login button
     @IBOutlet weak var fbLoginButton: FBSDKLoginButton!
@@ -21,8 +21,13 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        //self.fbLoginButton.loginBehavior = .systemAccount
+        for const in fbLoginButton.constraints{
+            if const.firstAttribute == NSLayoutAttribute.height && const.constant == 28{
+                fbLoginButton.removeConstraint(const)
+            }
+        }
+//        self.fbLoginButton.readPermissions = ["public_profile"]
+//        self.fbLoginButton.loginBehavior = .systemAccount
     }
     
     @IBAction func loginButtonTapped(_ sender: UIButton) {
@@ -36,46 +41,68 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
     
     ///This method is used to load the next view. It uses Dyspatch async to avoid errors
     func loadNextView(){
-        DispatchQueue.main.async(execute: {self.performSegue(withIdentifier: "LoginSegue", sender: self)})
+        self.performSegue(withIdentifier: "LoginSegue", sender: self)
     }
     
     @IBAction func handleSingleTap(_ sender: UITapGestureRecognizer) {
         self.view.endEditing(true)
     }
-
+    
     /**
      Login handler. Used to parse the result of taskForPOSTMethod
      - Parameter jsonBody:   The body for the request.
      */
     func completeLogin(_ jsonBody: String){
         self.view.endEditing(true)
-        let _ = UdacityClient.sharedInstance().taskForPOSTMethod(method: UdacityClient.Constants.AuthorizationURL, headers: UdacityClient.Constants.AuthorizationHeaders, jsonBody: jsonBody, pathExtension: UdacityClient.Constants.AuthorizationPath) { (result, error) in
+        let _ = UdacityClient.sharedInstance().taskForPOSTMethod(host: UdacityClient.Constants.AuthorizationHost, headers: UdacityClient.Constants.AuthorizationHeaders, jsonBody: jsonBody, pathExtension: UdacityClient.Constants.AuthorizationPath) { (result, error) in
             // GUARD: Was there an error?
             guard (error == nil) else {
                 UdacityClient.sharedInstance().showErrorMessage(error!, self)
                 return
             }
-            self.loadNextView()
-        }
-    }
-    
-    
-    func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!) {
-        if error != nil {
-            UdacityClient.sharedInstance().showErrorMessage(error, self)
-            return
-        }else if result.isCancelled {
-            return
-        }else {
-            guard let token = FBSDKAccessToken.current().tokenString else {
+            guard let result = result as? [String:[String:AnyObject]] else {
                 return
             }
-            let jsonBody = "{\"facebook_mobile\": {\"access_token\": \"\(token)\"}}"
-            completeLogin(jsonBody)
+            guard let sessionInfo = result["session"], let expirationDate = sessionInfo["expiration"] as? String else {
+                return
+            }
+            guard let accountInfo = result["account"], let user = accountInfo["key"] as? String else {
+                return
+            }
+            let dateString = String("\(expirationDate)".characters.dropLast(8)) + "z"
+            let isoFormatter = ISO8601DateFormatter()
+            guard let sessionExpirationDate = isoFormatter.date(from: dateString) else {
+                return
+            }
+            self.getUserData(user)
+            UserDefaults.standard.set(sessionExpirationDate, forKey: "SESSION_EXPIRATION_DATE")
+            UserDefaults.standard.synchronize()
+            performUIUpdatesOnMain {
+                self.loadNextView()
+            }
         }
     }
-    func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
-        
+    
+    func getUserData(_ user: String){
+        let _ = UdacityClient.sharedInstance().taskForGETMethod(host: UdacityClient.Constants.AuthorizationHost, pathExtension: UdacityClient.Constants.UserPath + user, drop: true) { (result, error) in
+            // GUARD: Was there an error?
+            guard (error == nil) else {
+                UdacityClient.sharedInstance().showErrorMessage(error!, self)
+                return
+            }
+            guard let result = result as? [String:AnyObject] else {
+                return
+            }
+            guard let userData = result["user"], let firstName = userData["first_name"] as? String, let lastName = userData["last_name"] as? String else {
+                return
+            }
+            UserDefaults.standard.set(firstName, forKey: "USER_FIRST_NAME")
+            UserDefaults.standard.set(lastName, forKey: "USER_LAST_NAME")
+            UserDefaults.standard.set(user, forKey: "KEY")
+        }
     }
+    
+    
+
     
 }

@@ -44,8 +44,6 @@
 	<true/>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This application wants to collect your location to share it with other users</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>{human-readable reason for photo access}</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>

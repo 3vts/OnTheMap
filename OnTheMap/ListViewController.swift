@@ -7,30 +7,35 @@
 //
 
 import UIKit
-import FBSDKLoginKit
 import MapKit
 
 class ListViewController: UITableViewController {
     
-    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     @IBOutlet weak var searchBar: UISearchBar!
     var students = [Student]()
     var filteredStudents = [Student]()
     var inSearchMode = false
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        refreshControl = UIRefreshControl()
+        refreshControl?.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl?.addTarget(self, action: #selector(ListViewController.handleRefresh), for: UIControlEvents.valueChanged)
+    }
+    
+    func handleRefresh() {
+        reloadList()
+        refreshControl?.endRefreshing()
+    }
+    
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if UdacityClient.sharedInstance().students.isEmpty {
-            reloadList()
-        } else {
-            students = UdacityClient.sharedInstance().students
-            tableView.reloadData()
-            setActivityindicator(true)
-        }
-    }
-    @IBAction func reloadTapped(_ sender: UIButton) {
         reloadList()
+    }
+    
+    @IBAction func addLocationTapped(_ sender: UIButton) {
+        UdacityClient.sharedInstance().previouslyPosted(self)
     }
     
     @IBAction func logoutTapped(_ sender: UIButton) {
@@ -72,39 +77,22 @@ class ListViewController: UITableViewController {
         return cell!
     }
     
-    func setActivityindicator(_ hide: Bool){
-        UIView.animate(withDuration: 0.5) {
-            self.loadingIndicator.alpha = hide ? 0.0 : 1.0
-            self.searchBar.alpha = hide ? 1.0 : 0.0
-            self.loadingIndicator.isHidden = hide
-            self.searchBar.isHidden = !hide
-        }
-    }
-    
     func reloadList(){
-        setActivityindicator(false)
-        UdacityClient.sharedInstance().getStudentsLocations(self){
-            self.students = UdacityClient.sharedInstance().students
-            performUIUpdatesOnMain {
-                self.tableView.reloadData()
-                self.setActivityindicator(true)
+        if UdacityClient.sharedInstance().students.isEmpty {
+            UdacityClient.sharedInstance().getStudentsLocations(self){
+                self.students = UdacityClient.sharedInstance().students
+                performUIUpdatesOnMain {
+                    self.tableView.reloadData()
+                }
             }
+        } else {
+            students = UdacityClient.sharedInstance().students
+            tableView.reloadData()
         }
+        
     }
 }
 
-extension ListViewController: UISearchBarDelegate {
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchBar.text! != "" {
-            inSearchMode = true
-            let lowerCasedInput = searchBar.text?.lowercased()
-            filteredStudents = students.filter({ "\($0.firstName.lowercased()) \($0.lastName.lowercased())".range(of: lowerCasedInput!) != nil })
-        }else {
-            inSearchMode = false
-            self.view.endEditing(true)
-        }
-        self.tableView.reloadData()
-    }
-}
+
 
 

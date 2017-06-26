@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import CoreLocation
 import MapKit
 
 class AddLocationViewController: UIViewController {
@@ -38,10 +37,6 @@ class AddLocationViewController: UIViewController {
     
     var myAnnotation: locationToPin!
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
-    
     @IBAction func cancelTapped(_ sender: UIButton) {
         self.dismiss(animated: true, completion: nil)
     }
@@ -52,17 +47,17 @@ class AddLocationViewController: UIViewController {
     
     @IBAction func locationTextChanged(_ sender: UITextField) {
         findLocationButton.isEnabled = (sender.text! != "")
-        findLocationButton.alpha = (sender.text! != "") ? 1 : 0.7
+        findLocationButton.alpha = (sender.text! != "") ? 1 : 0.5
         
     }
     
     @IBAction func websiteTextChanged(_ sender: UITextField) {
         setLocationButton.isEnabled = (sender.text! != "")
-        setLocationButton.alpha = (sender.text! != "") ? 1 : 0.7
+        setLocationButton.alpha = (sender.text! != "") ? 1 : 0.5
     }
     
     @IBAction func setLocationTapped(_ sender: UIButton) {
-        guard let urlString = urlTextView.text, URL(string: urlString) != nil else {
+        guard let urlString = urlTextView.text, let url = URL(string: urlString), UIApplication.shared.canOpenURL(url) else {
             let controller = UIAlertController(title: "Invalid URL", message: "The URL should be valid", preferredStyle: .alert)
             controller.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
             self.present(controller, animated: true, completion: nil)
@@ -73,8 +68,24 @@ class AddLocationViewController: UIViewController {
         let location = CLLocationCoordinate2DMake(latitude!, longitude!)
         let span = MKCoordinateSpanMake(0.05, 0.05)
         let region = MKCoordinateRegion(center: location, span: span)
-        myAnnotation = locationToPin(location: location, url: urlString, title: "Test", region: region)
-        performSegue(withIdentifier: "showMap", sender: location)
+        guard let firstName = UserDefaults.standard.value(forKey:"USER_FIRST_NAME"),let lastName = UserDefaults.standard.value(forKey:"USER_LAST_NAME") else {
+            return
+        }
+        guard let uniqueKey = UserDefaults.standard.value(forKey: "KEY") as? String else{
+            return
+        }
+        let fullName = "\(firstName) \(lastName)"
+        let jsonBody = "{\"uniqueKey\": \"\(uniqueKey)\", \"firstName\": \"\(firstName)\", \"lastName\": \"\(lastName)\", \"mapString\": \"\(locationTextView.text!)\", \"mediaURL\": \"\(urlTextView.text!)\", \"latitude\": \(latitude!), \"longitude\": \(longitude!)}"
+        postStudentLocation(jsonBody) { (success) in
+            if success == true {
+                self.myAnnotation = locationToPin(location: location, url: urlString, title: fullName, region: region)
+                UdacityClient.sharedInstance().getStudentsLocations(self, update: {
+                    performUIUpdatesOnMain {
+                        self.performSegue(withIdentifier: "showMap", sender: location)
+                    }
+                })
+            }
+        }
     }
     
     @IBAction func findLocationTapped(_ sender: UIButton) {
@@ -96,37 +107,30 @@ class AddLocationViewController: UIViewController {
         self.setLocationButton.isHidden = false
         self.view.endEditing(true)
     }
-
-}
-
-extension AddLocationViewController: MKMapViewDelegate {
-    func addPinLocation(_ location: CLLocationCoordinate2D)  {
-        let annotation = OnTheMapAnnotation()
-        self.mapView.removeAnnotations(self.mapView.annotations)
-        annotation.imageName = UIImage(named: "icon_pin")
-        annotation.coordinate = location
-        self.mapView.addAnnotation(annotation)
-        let span = MKCoordinateSpanMake(0.05, 0.05)
-        let region = MKCoordinateRegion(center: location, span: span)
-        self.mapView.setRegion(region, animated: true)
+    
+    func postStudentLocation(_ jsonBody: String, completion: @escaping (Bool) -> ()){
+        var pathExtension: String
+        var method: String
+        if UdacityClient.sharedInstance().objectID != nil{
+            pathExtension = "\(UdacityClient.Constants.ApiPath)/\(UdacityClient.sharedInstance().objectID!)"
+            method = "PUT"
+        }else {
+            pathExtension = UdacityClient.Constants.ApiPath
+            method = "POST"
+        }
+        
+        let _ = UdacityClient.sharedInstance().taskForPOSTMethod(host: UdacityClient.Constants.ApiHost, headers: UdacityClient.Constants.PostLocationHeaders, method: method, jsonBody: jsonBody, pathExtension: pathExtension, drop: false) { (result, error) in
+            // GUARD: Was there an error?
+            
+            guard (error == nil) else {
+                UdacityClient.sharedInstance().showErrorMessage(error!, self)
+                completion(false)
+                return
+            }
+            completion(true)
+        }
     }
     
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        let reuseId = "pin"
-        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId)
-        
-        if pinView == nil {
-            pinView = MKAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
-        }
-        else {
-            pinView!.annotation = annotation
-        }
-        
-        let customPin = annotation as! OnTheMapAnnotation
-        pinView?.image = customPin.imageName
-        
-        return pinView
-    }
 }
 
 

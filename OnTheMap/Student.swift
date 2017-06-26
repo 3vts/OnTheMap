@@ -11,6 +11,7 @@ import Foundation
 
 struct Student {
     
+    let createdAt: Date
     let firstName: String
     let lastName: String
     let latitude: Double
@@ -19,8 +20,11 @@ struct Student {
     let mediaURL: String
     let objectId: String
     let uniqueKey: String
+    let updatedAt: Date
     
     init(dictionary: [String:AnyObject]) {
+        let isoFormatter = ISO8601DateFormatter()
+        createdAt = isoFormatter.date(from: dictionary[UdacityClient.JSONResponseKeys.createdAt] as! String) ?? Date(timeIntervalSince1970: 0)
         firstName = dictionary[UdacityClient.JSONResponseKeys.firstName] as? String ?? ""
         lastName = dictionary[UdacityClient.JSONResponseKeys.lastName] as? String ?? ""
         latitude = dictionary[UdacityClient.JSONResponseKeys.latitude] as? Double ?? 0
@@ -29,6 +33,7 @@ struct Student {
         mediaURL = dictionary[UdacityClient.JSONResponseKeys.mediaURL] as? String ?? ""
         objectId = dictionary[UdacityClient.JSONResponseKeys.objectId] as? String ?? ""
         uniqueKey = dictionary[UdacityClient.JSONResponseKeys.uniqueKey] as? String ?? ""
+        updatedAt = isoFormatter.date(from: dictionary[UdacityClient.JSONResponseKeys.updatedAt] as! String) ?? Date(timeIntervalSince1970: 0)
     }
     
     static func studentsFromResults(_ results: [[String:AnyObject]]) -> [Student] {

@@ -17,6 +17,12 @@
 		99650C2B1EF2FD3000AEB7FE /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99650C2A1EF2FD2F00AEB7FE /* MapKit.framework */; };
 		99650C2D1EF311A300AEB7FE /* AddLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99650C2C1EF311A300AEB7FE /* AddLocationViewController.swift */; };
 		997FB9FC1EF76A040023FA77 /* GCDBlackBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 997FB9FB1EF76A040023FA77 /* GCDBlackBox.swift */; };
+		99A279F31F0176BE00DD2218 /* UdacityClientConvenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99A279F21F0176BE00DD2218 /* UdacityClientConvenience.swift */; };
+		99A279F61F017ACB00DD2218 /* AddLocationViewController+MKMapViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99A279F51F017ACB00DD2218 /* AddLocationViewController+MKMapViewDelegate.swift */; };
+		99A279F81F017B3800DD2218 /* LoginViewController+FBSDKLoginButtonDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99A279F71F017B3800DD2218 /* LoginViewController+FBSDKLoginButtonDelegate.swift */; };
+		99A279FA1F017C0C00DD2218 /* ListViewController+UISearchBarDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99A279F91F017C0C00DD2218 /* ListViewController+UISearchBarDelegate.swift */; };
+		99A279FC1F017D7E00DD2218 /* MapViewController+MKMapViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99A279FB1F017D7E00DD2218 /* MapViewController+MKMapViewDelegate.swift */; };
+		99A279FE1F017F2800DD2218 /* MapViewController+CLLocationManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99A279FD1F017F2800DD2218 /* MapViewController+CLLocationManagerDelegate.swift */; };
 		99B034CD1EF42928001A2B0F /* Student.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99B034CC1EF42928001A2B0F /* Student.swift */; };
 		99B034D01EF4402B001A2B0F /* UdacityClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99B034CF1EF4402B001A2B0F /* UdacityClient.swift */; };
 		99B034D21EF44306001A2B0F /* UdacityConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99B034D11EF44306001A2B0F /* UdacityConstants.swift */; };
@@ -38,6 +44,12 @@
 		99650C2A1EF2FD2F00AEB7FE /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		99650C2C1EF311A300AEB7FE /* AddLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddLocationViewController.swift; sourceTree = "<group>"; };
 		997FB9FB1EF76A040023FA77 /* GCDBlackBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GCDBlackBox.swift; sourceTree = "<group>"; };
+		99A279F21F0176BE00DD2218 /* UdacityClientConvenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityClientConvenience.swift; sourceTree = "<group>"; };
+		99A279F51F017ACB00DD2218 /* AddLocationViewController+MKMapViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AddLocationViewController+MKMapViewDelegate.swift"; sourceTree = "<group>"; };
+		99A279F71F017B3800DD2218 /* LoginViewController+FBSDKLoginButtonDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "LoginViewController+FBSDKLoginButtonDelegate.swift"; sourceTree = "<group>"; };
+		99A279F91F017C0C00DD2218 /* ListViewController+UISearchBarDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ListViewController+UISearchBarDelegate.swift"; sourceTree = "<group>"; };
+		99A279FB1F017D7E00DD2218 /* MapViewController+MKMapViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MapViewController+MKMapViewDelegate.swift"; sourceTree = "<group>"; };
+		99A279FD1F017F2800DD2218 /* MapViewController+CLLocationManagerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MapViewController+CLLocationManagerDelegate.swift"; sourceTree = "<group>"; };
 		99B034CC1EF42928001A2B0F /* Student.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Student.swift; sourceTree = "<group>"; };
 		99B034CF1EF4402B001A2B0F /* UdacityClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityClient.swift; sourceTree = "<group>"; };
 		99B034D11EF44306001A2B0F /* UdacityConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityConstants.swift; sourceTree = "<group>"; };
@@ -109,6 +121,18 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		99A279F41F017A7700DD2218 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				99A279F51F017ACB00DD2218 /* AddLocationViewController+MKMapViewDelegate.swift */,
+				99A279F71F017B3800DD2218 /* LoginViewController+FBSDKLoginButtonDelegate.swift */,
+				99A279F91F017C0C00DD2218 /* ListViewController+UISearchBarDelegate.swift */,
+				99A279FB1F017D7E00DD2218 /* MapViewController+MKMapViewDelegate.swift */,
+				99A279FD1F017F2800DD2218 /* MapViewController+CLLocationManagerDelegate.swift */,
+			);
+			name = Extensions;
+			sourceTree = "<group>";
+		};
 		99B034CA1EF42517001A2B0F /* Controller */ = {
 			isa = PBXGroup;
 			children = (
@@ -116,6 +140,7 @@
 				99650C171EF22CC900AEB7FE /* ListViewController.swift */,
 				99650C271EF22E1400AEB7FE /* LoginViewController.swift */,
 				99650C2C1EF311A300AEB7FE /* AddLocationViewController.swift */,
+				99A279F41F017A7700DD2218 /* Extensions */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -133,6 +158,7 @@
 			isa = PBXGroup;
 			children = (
 				99B034CF1EF4402B001A2B0F /* UdacityClient.swift */,
+				99A279F21F0176BE00DD2218 /* UdacityClientConvenience.swift */,
 				99B034D11EF44306001A2B0F /* UdacityConstants.swift */,
 			);
 			name = Clients;
@@ -299,14 +325,20 @@
 			files = (
 				99650C281EF22E1400AEB7FE /* LoginViewController.swift in Sources */,
 				99B034D21EF44306001A2B0F /* UdacityConstants.swift in Sources */,
+				99A279FE1F017F2800DD2218 /* MapViewController+CLLocationManagerDelegate.swift in Sources */,
 				99B034CD1EF42928001A2B0F /* Student.swift in Sources */,
 				99650C181EF22CC900AEB7FE /* ListViewController.swift in Sources */,
+				99A279F31F0176BE00DD2218 /* UdacityClientConvenience.swift in Sources */,
 				997FB9FC1EF76A040023FA77 /* GCDBlackBox.swift in Sources */,
+				99A279F81F017B3800DD2218 /* LoginViewController+FBSDKLoginButtonDelegate.swift in Sources */,
 				99B034D51EF4DF0B001A2B0F /* OnTheMapAnnotation.swift in Sources */,
 				99650C2D1EF311A300AEB7FE /* AddLocationViewController.swift in Sources */,
+				99A279F61F017ACB00DD2218 /* AddLocationViewController+MKMapViewDelegate.swift in Sources */,
+				99A279FC1F017D7E00DD2218 /* MapViewController+MKMapViewDelegate.swift in Sources */,
 				99650C141EF22CC900AEB7FE /* AppDelegate.swift in Sources */,
 				99B034D01EF4402B001A2B0F /* UdacityClient.swift in Sources */,
 				99650C161EF22CC900AEB7FE /* MapViewController.swift in Sources */,
+				99A279FA1F017C0C00DD2218 /* ListViewController+UISearchBarDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
