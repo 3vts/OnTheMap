@@ -154,7 +154,7 @@
                                             <constraint firstAttribute="height" constant="85" id="IVD-92-Cv5"/>
                                         </constraints>
                                     </imageView>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter a Location" textAlignment="natural" clearsOnBeginEditing="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="oM2-FA-f6d">
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter a Location" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="oM2-FA-f6d">
                                         <rect key="frame" x="27" y="114.99999999999997" width="290" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="XlJ-Ay-zI9"/>
@@ -220,13 +220,46 @@
                                     <action selector="setLocationTapped:" destination="wzj-bE-OJP" eventType="touchUpInside" id="6FL-zY-Kat"/>
                                 </connections>
                             </button>
+                            <view hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F79-ph-ZOn">
+                                <rect key="frame" x="144.66666666666669" y="305.66666666666669" width="125.00000000000006" height="125"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="3HR-rc-iOB">
+                                        <rect key="frame" x="25" y="29" width="75" height="67.333333333333314"/>
+                                        <subviews>
+                                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="NdM-B8-YXr">
+                                                <rect key="frame" x="19" y="0.0" width="37" height="37"/>
+                                            </activityIndicatorView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Y9-Ay-nkX">
+                                                <rect key="frame" x="0.0" y="47" width="75" height="20.333333333333314"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="3HR-rc-iOB" firstAttribute="centerX" secondItem="F79-ph-ZOn" secondAttribute="centerX" id="66p-xH-qOH"/>
+                                    <constraint firstItem="3HR-rc-iOB" firstAttribute="centerY" secondItem="F79-ph-ZOn" secondAttribute="centerY" id="DG2-QT-xe3"/>
+                                    <constraint firstAttribute="width" constant="125" id="p07-Ue-S3G"/>
+                                    <constraint firstAttribute="height" constant="125" id="zcu-06-PwD"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="25"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="2od-lZ-9kh" firstAttribute="trailing" secondItem="6qh-yg-Dm5" secondAttribute="trailing" constant="-9" id="2IK-GA-Crg"/>
                             <constraint firstItem="VdG-gB-Sl6" firstAttribute="centerX" secondItem="ZOU-Zx-xys" secondAttribute="centerX" id="P18-71-Uz7"/>
                             <constraint firstItem="oM2-FA-f6d" firstAttribute="width" secondItem="ZOU-Zx-xys" secondAttribute="width" multiplier="0.7" id="dXV-bm-R4V"/>
+                            <constraint firstItem="F79-ph-ZOn" firstAttribute="centerY" secondItem="ZOU-Zx-xys" secondAttribute="centerY" id="ruI-SC-j73"/>
                             <constraint firstItem="VdG-gB-Sl6" firstAttribute="centerY" secondItem="ZOU-Zx-xys" secondAttribute="centerY" multiplier="1.1" id="tOl-iq-3qX"/>
+                            <constraint firstItem="F79-ph-ZOn" firstAttribute="centerX" secondItem="ZOU-Zx-xys" secondAttribute="centerX" id="u3U-Wq-l7h"/>
                             <constraint firstItem="2od-lZ-9kh" firstAttribute="centerY" secondItem="6qh-yg-Dm5" secondAttribute="centerY" id="xgK-C7-rp3"/>
                         </constraints>
                         <connections>
@@ -248,6 +281,7 @@
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="findLocationButton" destination="bhA-Qn-dM4" id="0gV-te-hUa"/>
+                        <outlet property="loadingIndicator" destination="F79-ph-ZOn" id="wG7-RO-jbE"/>
                         <outlet property="locationTextView" destination="oM2-FA-f6d" id="RpW-vZ-6gJ"/>
                         <outlet property="mapView" destination="6qh-yg-Dm5" id="oc7-d8-sCQ"/>
                         <outlet property="setLocationButton" destination="2od-lZ-9kh" id="gsx-vf-SaH"/>
@@ -568,6 +602,6 @@
         <image name="logo-u" width="62" height="62"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Ft7-mM-Njv"/>
+        <segue reference="cV3-16-z5y"/>
     </inferredMetricsTieBreakers>
 </document>

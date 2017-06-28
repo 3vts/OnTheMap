@@ -76,7 +76,7 @@ class MapViewController: UIViewController {
         annotation.coordinate = location
         annotation.title = title
         annotation.subtitle = url
-        self.mapView.addAnnotation(annotation)
+        mapView.addAnnotation(annotation)
     }
     
     func zoomMapToPin(_ region: MKCoordinateRegion){
@@ -85,7 +85,7 @@ class MapViewController: UIViewController {
     }
     
     func setActivityindicator(_ hide: Bool){
-        self.view.isUserInteractionEnabled = hide
+        view.isUserInteractionEnabled = hide
         UIView.animate(withDuration: 0.5) {
             self.view.alpha = hide ? 1.0 : 0.7
             self.loadingIndicator.alpha = hide ? 0.0 : 1.0

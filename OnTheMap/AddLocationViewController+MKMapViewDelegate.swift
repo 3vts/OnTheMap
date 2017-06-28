@@ -12,13 +12,13 @@ import MapKit
 extension AddLocationViewController: MKMapViewDelegate {
     func addPinLocation(_ location: CLLocationCoordinate2D)  {
         let annotation = OnTheMapAnnotation()
-        self.mapView.removeAnnotations(self.mapView.annotations)
+        mapView.removeAnnotations(mapView.annotations)
         annotation.imageName = UIImage(named: "icon_pin")
         annotation.coordinate = location
-        self.mapView.addAnnotation(annotation)
+        mapView.addAnnotation(annotation)
         let span = MKCoordinateSpanMake(0.05, 0.05)
         let region = MKCoordinateRegion(center: location, span: span)
-        self.mapView.setRegion(region, animated: true)
+        mapView.setRegion(region, animated: true)
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -36,5 +36,9 @@ extension AddLocationViewController: MKMapViewDelegate {
         pinView?.image = customPin.imageName
         
         return pinView
+    }
+    
+    func mapViewDidFinishRenderingMap(_ mapView: MKMapView, fullyRendered: Bool) {
+        setActivityindicator(true)
     }
 }

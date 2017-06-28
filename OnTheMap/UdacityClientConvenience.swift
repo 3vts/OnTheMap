@@ -204,4 +204,98 @@ extension UdacityClient {
             sender.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
         }
     }
+    
+    /**
+      Function used to parse the result of taskForPOSTMethod
+     
+     - Parameter jsonBody:   The body for the request.
+     - parameter sender: ViewController from which the method was called Used in the cases a message has to be displayed
+     - parameter completion: A closure which is called to finish the method call
+     
+     */
+    func completeLogin(_ jsonBody: String, _ sender: UIViewController, completion: @escaping () -> ()){
+        sender.view.endEditing(true)
+        let _ = taskForPOSTMethod(host: Constants.AuthorizationHost, headers: Constants.AuthorizationHeaders, jsonBody: jsonBody, pathExtension: Constants.AuthorizationPath) { (result, error) in
+            // GUARD: Was there an error?
+            guard (error == nil) else {
+                self.showErrorMessage(error!, sender)
+                return
+            }
+            guard let result = result as? [String:[String:AnyObject]] else {
+                return
+            }
+            guard let sessionInfo = result["session"], let expirationDate = sessionInfo["expiration"] as? String else {
+                return
+            }
+            guard let accountInfo = result["account"], let user = accountInfo["key"] as? String else {
+                return
+            }
+            let dateString = String("\(expirationDate)".characters.dropLast(8)) + "z"
+            let isoFormatter = ISO8601DateFormatter()
+            guard let sessionExpirationDate = isoFormatter.date(from: dateString) else {
+                return
+            }
+            self.getUserData(user, sender)
+            UserDefaults.standard.set(sessionExpirationDate, forKey: "SESSION_EXPIRATION_DATE")
+            UserDefaults.standard.synchronize()
+            completion()
+        }
+    }
+    
+    /**
+     Function used to get the user data and store it on UserDefaults
+     
+     - parameter user: String containing the userID
+     - parameter sender: ViewController from which the method was called Used in the cases a message has to be displayed
+     
+     */
+    func getUserData(_ user: String, _ sender: UIViewController){
+        let _ = taskForGETMethod(host: Constants.AuthorizationHost, pathExtension: Constants.UserPath + user, drop: true) { (result, error) in
+            // GUARD: Was there an error?
+            guard (error == nil) else {
+                self.showErrorMessage(error!, sender)
+                return
+            }
+            guard let result = result as? [String:AnyObject] else {
+                return
+            }
+            guard let userData = result["user"], let firstName = userData["first_name"] as? String, let lastName = userData["last_name"] as? String else {
+                return
+            }
+            UserDefaults.standard.set(firstName, forKey: "USER_FIRST_NAME")
+            UserDefaults.standard.set(lastName, forKey: "USER_LAST_NAME")
+            UserDefaults.standard.set(user, forKey: "KEY")
+        }
+    }
+    
+    /**
+     Function used to post a Student location
+     
+     - Parameter jsonBody: The body for the request.
+     - parameter sender: ViewController from which the method was called Used in the cases a message has to be displayed
+     - parameter completion: A closure which is called to finish the method call. It indicates if the user has previously posted
+     
+     */
+    func postStudentLocation(_ jsonBody: String, _ sender: UIViewController, completion: @escaping (Bool) -> ()){
+        var pathExtension: String
+        var method: String
+        if objectID != nil{
+            pathExtension = "\(Constants.ApiPath)/\(objectID!)"
+            method = "PUT"
+        }else {
+            pathExtension = Constants.ApiPath
+            method = "POST"
+        }
+        
+        let _ = taskForPOSTMethod(host: Constants.ApiHost, headers: Constants.PostLocationHeaders, method: method, jsonBody: jsonBody, pathExtension: pathExtension, drop: false) { (result, error) in
+            // GUARD: Was there an error?
+            
+            guard (error == nil) else {
+                self.showErrorMessage(error!, sender)
+                completion(false)
+                return
+            }
+            completion(true)
+        }
+    }
 }

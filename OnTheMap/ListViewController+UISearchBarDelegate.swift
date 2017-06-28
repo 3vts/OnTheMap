@@ -14,11 +14,11 @@ extension ListViewController: UISearchBarDelegate {
         if searchBar.text! != "" {
             inSearchMode = true
             let lowerCasedInput = searchBar.text?.lowercased()
-            filteredStudents = students.filter({ "\($0.firstName.lowercased()) \($0.lastName.lowercased())".range(of: lowerCasedInput!) != nil })
+            filteredStudents = UdacityClient.sharedInstance().students.filter({ "\($0.firstName.lowercased()) \($0.lastName.lowercased())".range(of: lowerCasedInput!) != nil })
         }else {
             inSearchMode = false
-            self.view.endEditing(true)
+            view.endEditing(true)
         }
-        self.tableView.reloadData()
+        tableView.reloadData()
     }
 }

@@ -12,7 +12,6 @@ import MapKit
 class ListViewController: UITableViewController {
     
     @IBOutlet weak var searchBar: UISearchBar!
-    var students = [Student]()
     var filteredStudents = [Student]()
     var inSearchMode = false
     
@@ -24,14 +23,17 @@ class ListViewController: UITableViewController {
     }
     
     func handleRefresh() {
-        reloadList()
-        refreshControl?.endRefreshing()
+        reloadList { 
+            self.refreshControl?.endRefreshing()
+        }
     }
     
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        reloadList()
+        if UdacityClient.sharedInstance().students.isEmpty {
+            reloadList({})
+        }
     }
     
     @IBAction func addLocationTapped(_ sender: UIButton) {
@@ -43,20 +45,20 @@ class ListViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let source = inSearchMode ? filteredStudents : students
+        let source = inSearchMode ? filteredStudents : UdacityClient.sharedInstance().students
         return source.count
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.view.endEditing(true)
-        let source = inSearchMode ? filteredStudents : students
+        let source = inSearchMode ? filteredStudents : UdacityClient.sharedInstance().students
         let student = source[indexPath.row]
         UdacityClient.sharedInstance().locationToCenterMap(coordinate: CLLocationCoordinate2DMake(student.latitude, student.longitude))
         tabBarController!.selectedIndex = 0
     }
     
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-        let source = inSearchMode ? filteredStudents : students
+        let source = inSearchMode ? filteredStudents : UdacityClient.sharedInstance().students
         let app = UIApplication.shared
         guard let urlString = Optional(source[indexPath.row].mediaURL), let url = URL(string: urlString) else {
             return
@@ -65,7 +67,7 @@ class ListViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let source = inSearchMode ? filteredStudents : students
+        let source = inSearchMode ? filteredStudents : UdacityClient.sharedInstance().students
         let cell = tableView.dequeueReusableCell(withIdentifier: "studentLocationCell")
         let student = source[indexPath.row]
         
@@ -77,19 +79,13 @@ class ListViewController: UITableViewController {
         return cell!
     }
     
-    func reloadList(){
-        if UdacityClient.sharedInstance().students.isEmpty {
-            UdacityClient.sharedInstance().getStudentsLocations(self){
-                self.students = UdacityClient.sharedInstance().students
-                performUIUpdatesOnMain {
-                    self.tableView.reloadData()
-                }
+    func reloadList(_ completion: @escaping ()->()){
+        UdacityClient.sharedInstance().getStudentsLocations(self){
+            performUIUpdatesOnMain {
+                self.tableView.reloadData()
+                completion()
             }
-        } else {
-            students = UdacityClient.sharedInstance().students
-            tableView.reloadData()
         }
-        
     }
 }
 

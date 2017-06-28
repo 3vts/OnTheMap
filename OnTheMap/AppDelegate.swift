@@ -23,8 +23,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             let initialViewController = storyboard.instantiateViewController(withIdentifier: "TabViewController")
             
-            self.window?.rootViewController = initialViewController
-            self.window?.makeKeyAndVisible()
+            window?.rootViewController = initialViewController
+            window?.makeKeyAndVisible()
         }
         return true
     }

@@ -18,6 +18,7 @@ class AddLocationViewController: UIViewController {
     @IBOutlet weak var findLocationButton: UIButton!
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var setLocationButton: UIButton!
+    @IBOutlet weak var loadingIndicator: UIView!
     var geocoder: CLGeocoder?
     
     struct locationToPin {
@@ -42,7 +43,7 @@ class AddLocationViewController: UIViewController {
     }
     
     @IBAction func handleSingleTap(_ sender: UITapGestureRecognizer) {
-        self.view.endEditing(true)
+        view.endEditing(true)
     }
     
     @IBAction func locationTextChanged(_ sender: UITextField) {
@@ -60,7 +61,7 @@ class AddLocationViewController: UIViewController {
         guard let urlString = urlTextView.text, let url = URL(string: urlString), UIApplication.shared.canOpenURL(url) else {
             let controller = UIAlertController(title: "Invalid URL", message: "The URL should be valid", preferredStyle: .alert)
             controller.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-            self.present(controller, animated: true, completion: nil)
+            present(controller, animated: true, completion: nil)
             return
         }
         let latitude = mapView.annotations.first?.coordinate.latitude
@@ -76,7 +77,7 @@ class AddLocationViewController: UIViewController {
         }
         let fullName = "\(firstName) \(lastName)"
         let jsonBody = "{\"uniqueKey\": \"\(uniqueKey)\", \"firstName\": \"\(firstName)\", \"lastName\": \"\(lastName)\", \"mapString\": \"\(locationTextView.text!)\", \"mediaURL\": \"\(urlTextView.text!)\", \"latitude\": \(latitude!), \"longitude\": \(longitude!)}"
-        postStudentLocation(jsonBody) { (success) in
+        UdacityClient.sharedInstance().postStudentLocation(jsonBody, self) { (success) in
             if success == true {
                 self.myAnnotation = locationToPin(location: location, url: urlString, title: fullName, region: region)
                 UdacityClient.sharedInstance().getStudentsLocations(self, update: {
@@ -89,6 +90,7 @@ class AddLocationViewController: UIViewController {
     }
     
     @IBAction func findLocationTapped(_ sender: UIButton) {
+        setActivityindicator(false)
         if geocoder == nil {
             geocoder = CLGeocoder()
         }
@@ -103,31 +105,17 @@ class AddLocationViewController: UIViewController {
                 self.addPinLocation(CLLocationCoordinate2DMake(latitute!, longitude!))
             }
         })
-        self.mapView.isHidden = false
-        self.setLocationButton.isHidden = false
-        self.view.endEditing(true)
+        mapView.isHidden = false
+        setLocationButton.isHidden = false
+        view.endEditing(true)
     }
     
-    func postStudentLocation(_ jsonBody: String, completion: @escaping (Bool) -> ()){
-        var pathExtension: String
-        var method: String
-        if UdacityClient.sharedInstance().objectID != nil{
-            pathExtension = "\(UdacityClient.Constants.ApiPath)/\(UdacityClient.sharedInstance().objectID!)"
-            method = "PUT"
-        }else {
-            pathExtension = UdacityClient.Constants.ApiPath
-            method = "POST"
-        }
-        
-        let _ = UdacityClient.sharedInstance().taskForPOSTMethod(host: UdacityClient.Constants.ApiHost, headers: UdacityClient.Constants.PostLocationHeaders, method: method, jsonBody: jsonBody, pathExtension: pathExtension, drop: false) { (result, error) in
-            // GUARD: Was there an error?
-            
-            guard (error == nil) else {
-                UdacityClient.sharedInstance().showErrorMessage(error!, self)
-                completion(false)
-                return
-            }
-            completion(true)
+    func setActivityindicator(_ hide: Bool){
+        view.isUserInteractionEnabled = hide
+        UIView.animate(withDuration: 0.5) {
+            self.view.alpha = hide ? 1.0 : 0.7
+            self.loadingIndicator.alpha = hide ? 0.0 : 1.0
+            self.loadingIndicator.isHidden = hide
         }
     }
     

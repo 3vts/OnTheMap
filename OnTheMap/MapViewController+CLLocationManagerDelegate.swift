@@ -14,7 +14,6 @@ extension MapViewController : CLLocationManagerDelegate {
         if status == .authorizedWhenInUse {
             locationManager.requestLocation()
             locationManager.allowsBackgroundLocationUpdates = true
-            //locationManager.startUpdatingHeading()
         }
     }
     

@@ -22,7 +22,11 @@ extension LoginViewController:  FBSDKLoginButtonDelegate{
                 return
             }
             let jsonBody = "{\"facebook_mobile\": {\"access_token\": \"\(token)\"}}"
-            completeLogin(jsonBody)
+            UdacityClient.sharedInstance().completeLogin(jsonBody, self, completion: {
+                performUIUpdatesOnMain({
+                    self.loadNextView()
+                })
+            })
         }
     }
     func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
