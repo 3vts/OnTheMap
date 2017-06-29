@@ -231,6 +231,7 @@ class UdacityClient: NSObject {
         struct Singleton {
             static var sharedInstance = UdacityClient()
         }
+        
         return Singleton.sharedInstance
     }
 }
