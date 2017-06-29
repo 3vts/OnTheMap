@@ -130,7 +130,7 @@ extension UdacityClient {
                 self.showErrorMessage(error!, sender)
                 return
             }
-            self.students = Student.studentsFromResults(result?["results"] as! [[String:AnyObject]])
+            StudentDataSource.sharedInstance.students = Student.studentsFromResults(result?["results"] as! [[String:AnyObject]])
             update()
         }
         

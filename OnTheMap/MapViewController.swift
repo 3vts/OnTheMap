@@ -28,7 +28,7 @@ class MapViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if UdacityClient.sharedInstance().students.isEmpty || mapView.annotations.count == 0 {
+        if StudentDataSource.sharedInstance.students.isEmpty || mapView.annotations.count == 0 {
             reloadAnnotations()
         }
         let region = UdacityClient.sharedInstance().region
@@ -95,7 +95,7 @@ class MapViewController: UIViewController {
     
     
     func showAnnotations() {
-        for student in UdacityClient.sharedInstance().students {
+        for student in StudentDataSource.sharedInstance.students {
             let location = CLLocationCoordinate2DMake(student.latitude, student.longitude)
             let url = student.mediaURL
             let title = "\(student.firstName) \(student.lastName)"

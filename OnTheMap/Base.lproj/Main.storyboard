@@ -165,6 +165,7 @@
                                         <connections>
                                             <action selector="locationTextChanged:" destination="wzj-bE-OJP" eventType="editingChanged" id="TLt-sb-fir"/>
                                             <action selector="locationTextChanged:" destination="wzj-bE-OJP" eventType="editingDidBegin" id="U8P-mm-jeS"/>
+                                            <outlet property="delegate" destination="wzj-bE-OJP" id="x7e-oD-91R"/>
                                         </connections>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter a Website" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="eFv-37-6Gq">
@@ -178,6 +179,7 @@
                                         <connections>
                                             <action selector="websiteTextChanged:" destination="wzj-bE-OJP" eventType="editingChanged" id="NRy-QV-chq"/>
                                             <action selector="websiteTextChanged:" destination="wzj-bE-OJP" eventType="editingDidBegin" id="Z96-ic-Avh"/>
+                                            <outlet property="delegate" destination="wzj-bE-OJP" id="oB7-uq-28u"/>
                                         </connections>
                                     </textField>
                                     <button opaque="NO" alpha="0.5" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bhA-Qn-dM4">

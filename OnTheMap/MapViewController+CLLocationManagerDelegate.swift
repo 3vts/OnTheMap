@@ -28,6 +28,7 @@ extension MapViewController : CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         let error = UdacityClient.sharedInstance().createError("Unable to acquire your location", "locationManager")
         UdacityClient.sharedInstance().showErrorMessage(error, self)
+        setActivityindicator(true)
     }
     
     

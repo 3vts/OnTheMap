@@ -21,9 +21,6 @@ class UdacityClient: NSObject {
     /// String used to store the objectID in case of a previously posted location
     var objectID: String?
     
-    /// Student array used to store the information of all the pins retrieved from the server
-    var students = [Student]()
-    
     /**
      Function to PUT or POST to the RESTful service
      

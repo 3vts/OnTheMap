@@ -38,6 +38,16 @@ class AddLocationViewController: UIViewController {
     
     var myAnnotation: locationToPin!
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        subscribeToKeyboardNotifications()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        unsubscribeFromKeyboardNotifications()
+    }
+    
     @IBAction func cancelTapped(_ sender: UIButton) {
         self.dismiss(animated: true, completion: nil)
     }
@@ -90,6 +100,8 @@ class AddLocationViewController: UIViewController {
     }
     
     @IBAction func findLocationTapped(_ sender: UIButton) {
+        view.endEditing(true)
+        mapView.removeAnnotations(mapView.annotations)
         setActivityindicator(false)
         if geocoder == nil {
             geocoder = CLGeocoder()
@@ -97,6 +109,7 @@ class AddLocationViewController: UIViewController {
         geocoder?.geocodeAddressString(locationTextView.text!, completionHandler: { (placemarks, error) in
             guard let placemark = placemarks?.first  else {
                 UdacityClient.sharedInstance().showErrorMessage(error!, self)
+                self.setActivityindicator(true)
                 return
             }
             let latitute = placemark.location?.coordinate.latitude
@@ -107,7 +120,6 @@ class AddLocationViewController: UIViewController {
         })
         mapView.isHidden = false
         setLocationButton.isHidden = false
-        view.endEditing(true)
     }
     
     func setActivityindicator(_ hide: Bool){
@@ -118,6 +130,8 @@ class AddLocationViewController: UIViewController {
             self.loadingIndicator.isHidden = hide
         }
     }
+    
+    
     
 }
 
