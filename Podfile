@@ -8,6 +8,5 @@ target 'OnTheMap' do
   # Pods for OnTheMap
   pod 'FacebookCore'
   pod 'FacebookLogin'
-  pod 'FacebookShare'
 
 end
